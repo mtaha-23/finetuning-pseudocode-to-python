@@ -59,10 +59,31 @@ def load_model():
         # Get the directory where the model files are located
         model_dir = Path(".")
         
-        # Check if model files exist
-        if not (model_dir / "model.safetensors").exists() and not (model_dir / "pytorch_model.bin").exists():
-            st.error("❌ Model file not found! Please ensure model.safetensors is in the same directory as app.py")
-            return None, None
+        # Check if model files exist locally
+        model_file = model_dir / "model.safetensors"
+        pytorch_model = model_dir / "pytorch_model.bin"
+        
+        # If model doesn't exist locally, try downloading from GitHub Releases
+        if not model_file.exists() and not pytorch_model.exists():
+            st.info("📥 Model file not found locally. Attempting to load from repository...")
+            # Try to load directly from the repository using transformers
+            # This will download from HuggingFace cache or repository
+            try:
+                # Try loading from local directory first (for Streamlit Cloud)
+                # If files exist in repo, transformers will find them
+                tokenizer = GPT2Tokenizer.from_pretrained(model_dir)
+                tokenizer.pad_token = tokenizer.eos_token
+                
+                device = "cuda" if torch.cuda.is_available() else "cpu"
+                model = GPT2LMHeadModel.from_pretrained(model_dir)
+                model.to(device)
+                model.eval()
+                
+                return model, tokenizer
+            except Exception as e:
+                st.warning(f"⚠️ Could not load from repository: {str(e)}")
+                st.error("❌ Model file not found! Please ensure model files are available.")
+                return None, None
         
         # Load tokenizer
         tokenizer = GPT2Tokenizer.from_pretrained(model_dir)

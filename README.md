@@ -80,10 +80,17 @@ A Streamlit web application for converting pseudocode to Python code using a fin
 6. Click "Deploy"
 
 ### Important Notes for Streamlit Cloud:
-- **Model Size**: If your model files are large (>100MB), consider using Git LFS or hosting them on cloud storage (S3, Google Drive, etc.) and downloading them at runtime
+- **Git LFS Configuration**: The repository includes `.lfsconfig` to ensure Git LFS uses HTTPS (not SSH) for downloads
+- **Model Size**: Model files are stored with Git LFS. Streamlit Cloud will automatically handle the download
 - **Memory Limits**: Streamlit Cloud has memory limits, so ensure your model fits within the constraints
 - **Startup Time**: First load may take a few minutes as Streamlit Cloud installs dependencies and loads your model
 - **CPU Only**: Streamlit Cloud runs on CPU, so GPU optimizations won't apply
+
+### If Git LFS Issues Persist:
+If you see "Permission denied (publickey)" errors, ensure:
+1. The repository is **public** (recommended for Streamlit Cloud)
+2. The `.lfsconfig` file is committed to the repository
+3. Try rebooting the app on Streamlit Cloud
 
 ### Alternative: Using Cloud Storage for Large Models
 If your model is too large for GitHub, modify `app.py` to download from cloud storage:

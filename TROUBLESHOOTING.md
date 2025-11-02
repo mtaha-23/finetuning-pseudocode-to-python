@@ -45,7 +45,7 @@ After making the repository public and ensuring `.lfsconfig` is committed:
 3. Select **Reboot app**
 4. Wait for it to redeploy
 
-### Solution 4: Alternative - Use Cloud Storage
+### Solution 5: Alternative - Use Cloud Storage
 
 If Git LFS continues to cause issues, you can host the model file elsewhere:
 - Google Drive (public link)
